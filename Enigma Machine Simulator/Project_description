@@ -1,0 +1,166 @@
+Enigma Machine Simulator (in C programming language)
+
+## Project
+
+# 1. Enigma Machine
+In this project, I worte a C program which implements a simplified version of an encrypting and decrypting machine called Enigma. It was
+invented by German engineer Arthur Scherbius and was used during World War II. This
+machine accepts the message that needs to be encrypted, uses some predefined rotors to
+encrypt the message and outputs the result. Also, it can accept encrypted messages and
+decrypt them. In this project I will implement both of these functionalities.
+
+# 2. Learning Goals
+This project has the following learning goals.
+1. Learn how to write a C program that follows the given specifications.
+2. Learn how functions improve code by making it modular and task oriented.
+3. Practice calling functions from different functions.
+4. Practice passing arguments to functions.
+5. Practice returning values from functions.
+6. Develop code using one-dimensional and two-dimensional arrays.
+7. Learn to write code that follows the commenting and the style guidelines.
+8. understanding of encryption techniques and algorithms while applying programming skills to develop a complex system.
+9. demonstrate my ability to work on projects involving historical encryption systems, showcasing my interest in cryptography and software development.
+
+# 3. Encryption and Decryption
+
+3.1. Encryption in Enigma
+The Enigma machine uses so-called rotors to encrypt messages. Inside the skeleton code for
+enigma.c (given below in Section 4), there is an array of strings called ROTOR_CONSTANTS
+that stores 9 rotors. For our project, the rotor at position 0 is an identity rotor. It is basically a
+string with original English alphabets in the same order. Letters in rotor 0 are in the correct
+order. Rotor 0 is given to help better see how the encryption and decryption processes
+occur. cannot use this rotor to encrypt messages since the original message will not
+change.Rotors at positions 1 - 8 of the array ROTORS are strings with the letters of the alphabet
+appearing in various order. For example, the rotors 0 to 3 are shown below.
+Rotor 0 - ABCDEFGHIJKLMNOPQRSTUVWXYZ
+Rotor 1 - EKMFLGDQVZNTOWYHXUSPAIBRCJ
+Rotor 2 - AJDKSIRUXBLHWTMCQGZNPYFVOE
+Rotor 3 - BDFHJLCPRTXVZNYEIWGAKMUSQO
+
+3.1.1. How to use rotors to encrypt messages?
+
+3.1.1.1. Encryption using one rotor
+Let’s consider this example:
+Message to be encrypted: JAVA
+Rotor to use: 1
+Number of rotations: 0
+Encrypted message: ZEIE
+A B C D E F G H I J K L M N O P Q R S T U V W X Y Z-> rotor 0
+E K M F L G D Q V Z N T O W Y H X U S P A I B R C J-> rotor 1
+The position of J in the original alphabet is 9. Therefore, Enigma finds the letter at position 9 on
+the rotor 1 which is Z. The position of A in the original alphabet is 0. Therefore, Enigma finds the
+letter at position 0 on the rotor 1 which is E, etc. This is how the message “JAVA” has been
+encrypted to “ZEIE” using the rotor 1 (without performing any rotations).
+
+3.1.1.2. Encryption using several rotors
+Let’s consider this example:
+Message to be encrypted: JAVA
+Rotors to use: 1 2 4
+Number of rotations: 0
+Encrypted message: PTMT
+The rotors 1, 2, and 4 that are used for encryption are shown below:
+====================================================
+ROTORS 1, 2, 4
+====================================================
+E K M F L G D Q V Z N T O W Y H X U S P A I B R C J -> rotor 1A J D K S I R U X B L H W T M C Q G Z N P Y F V O E -> rotor 2
+E S O V P Z J A Y Q U I R H X L N F T G K D C M W B -> rotor 4
+----------------------------------------------------
+Round 1:
+A B C D E F G H I J K L M N O P Q R S T U V W X Y Z-> rotor 0
+E K M F L G D Q V Z N T O W Y H X U S P A I B R C J-> rotor 1
+(result is ZEIE after using rotor 1 for encryption)
+
+Round 2:
+A B C D E F G H I J K L M N O P Q R S T U V W X Y Z-> rotor 0
+A J D K S I R U X B L H W T M C Q G Z N P Y F V O E-> rotor 2
+(result is ESXS after using rotor 2 for encryption)
+
+Round 3:
+A B C D E F G H I J K L M N O P Q R S T U V W X Y Z-> rotor 0
+E S O V P Z J A Y Q U I R H X L N F T G K D C M W B-> rotor 4
+(result is PTMT after using rotor 4 for encryption)
+
+Encryption using several rotors is done in the same way as encryption using one rotor, however
+there will be several rounds of encryption taking place. Once I get the message encrypted by
+rotor #1 which is ZEIE in our case,  pass it to the next rotor, rotor #2. Encrypted message of
+the rotor #2 is passed to the next rotor #4. Thus, the last encrypted message that comes out of
+rotor #4 is our final output PTMT.
+
+# 3.2. Decryption in Enigma
+In order to decrypt the message PTMT back to JAVA, the order of the rotors to be used should
+be reversed. Since we used rotors 1, 2 and 4 (in this same order) to encrypt our message
+JAVA, in order to decrypt it we should use the same rotors in the reverse order. i.e. 4, 2 and then
+1.
+Message to be decrypted: PTMT
+Rotors to use: 4 2 1
+Number of rotations: 0
+Decrypted message: JAVAThe procedure here is that I take rotor 4 and find the letters PTMT on this rotor and most
+importantly I extract the position of these letters on the rotor. Then, I use these positions
+to generate the first decrypted message by looking at which letter appears on these positions in
+the original alphabet, i.e. rotor 0. This way I get my first encrypted message that is ESXS.
+Then, again i take rotor 2 and find the positions of the letters ESXS on rotor 2. By looking at
+what letters appear on these positions in the original alphabet I build a second decrypted
+message which is ZEIE. Last round gives me the final output that is JAVA when I use rotor 1
+to decrypt ZEIE.
+
+# 3.3. Rotating the rotors in Enigma
+While performing encryption or decryption of the message, we enter some number from 0 to 25
+as a number of rotations. Number of rotations is simply the number of how many times I want
+to move the rotor values to the right (each row). For example, for the rotor 1 if I want to
+perform rotation equal to 3, then
+Rotor 1: E K M F L G D Q V Z N T O W Y H X U S P A I B R C J
+Rotated rotor 1 by 3: R C J E K M F L G D Q V Z N T O W Y H X U S P A I B
+
+The effects of rotating the rotors 1, 2, and 4 THREE times is shown below:
+====================================================
+ROTORS 1, 2, 4 BEFORE ROTATION
+====================================================
+E K M F L G D Q V Z N T O W Y H X U S P A I B R C J -> rotor 1
+A J D K S I R U X B L H W T M C Q G Z N P Y F V O E -> rotor 2
+E S O V P Z J A Y Q U I R H X L N F T G K D C M W B -> rotor 4
+----------------------------------------------------
+====================================================
+ROTORS 1, 2, 4 AFTER ROTATING THEM 3 TIMES
+====================================================
+R C J E K M F L G D Q V Z N T O W Y H X U S P A I B -> rotor 1
+V O E A J D K S I R U X B L H W T M C Q G Z N P Y F -> rotor 2
+M W B E S O V P Z J A Y Q U I R H X L N F T G K D C -> rotor 4
+----------------------------------------------------After completing a rotation for the rotor configurations array, encryption and decryption
+procedures take place in the same way as described before. When I want to encrypt a
+message with a particular number of rotations (for the rotors), then while decrypting that
+message back to its original message, I need to use the same value for the number of
+rotations (for the rotors) but the rotor indices should be in the reverse order. This will be more
+clear from the example given below.
+
+Message to be encrypted: JAVA
+Rotors to use: 1 2 4
+Number of rotations: 3
+Encrypted message: MQBQ
+
+Round 1:
+A B C D E F G H I J K L M N O P Q R S T U V W X Y Z -> rotor 0
+R C J E K M F L G D Q V Z N T O W Y H X U S P A I B -> rotor 1 (rotated)
+(result is DRSR after using rotor 1 (rotated 3 times) for encryption)
+
+Round 2:
+A B C D E F G H I J K L M N O P Q R S T U V W X Y Z -> rotor 0
+V O E A J D K S I R U X B L H W T M C Q G Z N P Y F -> rotor 2 (rotated)
+(result is AMCM after using rotor 2 (rotated 3 times) for encryption)
+
+Round 3:
+A B C D E F G H I J K L M N O P Q R S T U V W X Y Z -> rotor 0
+M W B E S O V P Z J A Y Q U I R H X L N F T G K D C -> rotor 4 (rotated)
+(result is MQBQ after using rotor 4 (rotated 3 times) for encryption)
+
+Note that even though we have used the same three rotors (rotors 1, 2, and 4) as used in
+section 4.2.2 for encrypting the message JAVA we have obtained a completely different
+encrypted message since all the three rotors have been rotated 3 times before we performed
+the encryption.
+
+The following configuration is to be used if we want to decrypt the message MQBQ back to
+JAVA:
+Message to be decrypted: MQBQ
+Rotors to use: 4 2 1Number of rotations: 3
+Decrypted message: JAVA
+
+
